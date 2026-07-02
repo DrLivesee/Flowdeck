@@ -1,0 +1,287 @@
+@import "tailwindcss";
+
+:root {
+  color: #e5e7eb;
+  background: #0f172a;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+:root[data-theme="light"] {
+  color: #0f172a;
+  background: #e2e8f0;
+}
+
+:root[data-theme="light"] body {
+  background: #e2e8f0;
+}
+
+.flowdeck-app-bg {
+  background:
+    radial-gradient(circle at top left, rgb(34 211 238 / 0.22), transparent 30%),
+    radial-gradient(circle at 80% 20%, rgb(139 92 246 / 0.18), transparent 28%),
+    linear-gradient(135deg, #020617 0%, #0f172a 45%, #111827 100%);
+}
+
+:root[data-theme="light"] .flowdeck-app-bg {
+  background:
+    radial-gradient(circle at top left, rgb(14 165 233 / 0.28), transparent 32%),
+    radial-gradient(circle at 82% 18%, rgb(124 58 237 / 0.18), transparent 30%),
+    linear-gradient(135deg, #f8fafc 0%, #e2e8f0 48%, #cbd5e1 100%);
+}
+
+.flowdeck-modal-backdrop {
+  background-color: rgb(2 6 23 / 0.7);
+}
+
+:root[data-theme="light"] .flowdeck-modal-backdrop {
+  background-color: rgb(15 23 42 / 0.38) !important;
+}
+
+:root[data-theme="light"] .bg-slate-950,
+:root[data-theme="light"] .bg-slate-950\/50,
+:root[data-theme="light"] .bg-slate-950\/70,
+:root[data-theme="light"] .bg-slate-950\/80 {
+  background-color: rgb(241 245 249 / 0.92) !important;
+}
+
+:root[data-theme="light"] .bg-slate-950\/20 {
+  background-color: rgb(15 23 42 / 0.08) !important;
+}
+
+:root[data-theme="light"] .bg-slate-900,
+:root[data-theme="light"] .bg-slate-900\/80,
+:root[data-theme="light"] .bg-slate-900\/90,
+:root[data-theme="light"] .bg-slate-900\/95 {
+  background-color: rgb(226 232 240 / 0.96) !important;
+}
+
+:root[data-theme="light"] .bg-white\/5,
+:root[data-theme="light"] .bg-white\/10,
+:root[data-theme="light"] .bg-white\/15,
+:root[data-theme="light"] .bg-white\/20,
+:root[data-theme="light"] .bg-white\/30,
+:root[data-theme="light"] .bg-white\/40,
+:root[data-theme="light"] .bg-white\/50,
+:root[data-theme="light"] .bg-white\/60,
+:root[data-theme="light"] .bg-white\/70,
+:root[data-theme="light"] .bg-white\/80,
+:root[data-theme="light"] .bg-white\/90,
+:root[data-theme="light"] .bg-white\/\[0\.03\],
+:root[data-theme="light"] .bg-white\/\[0\.04\],
+:root[data-theme="light"] .bg-white\/\[0\.06\] {
+  background-color: rgb(255 255 255 / 0.78) !important;
+}
+
+:root[data-theme="light"] .hover\:bg-white\/10:hover,
+:root[data-theme="light"] .hover\:bg-white\/15:hover,
+:root[data-theme="light"] .hover\:bg-white\/\[0\.04\]:hover,
+:root[data-theme="light"] .hover\:bg-white\/\[0\.08\]:hover {
+  background-color: rgb(15 23 42 / 0.07) !important;
+}
+
+:root[data-theme="light"] .text-white,
+:root[data-theme="light"] .text-slate-100 {
+  color: #0f172a !important;
+}
+
+:root[data-theme="light"] .text-slate-300,
+:root[data-theme="light"] .text-slate-400,
+:root[data-theme="light"] .text-slate-500 {
+  color: #475569 !important;
+}
+
+:root[data-theme="light"] .text-cyan-50,
+:root[data-theme="light"] .text-cyan-100,
+:root[data-theme="light"] .text-cyan-100\/75,
+:root[data-theme="light"] .text-cyan-200,
+:root[data-theme="light"] .text-cyan-200\/70 {
+  color: #0e7490 !important;
+}
+
+:root[data-theme="light"] .text-rose-100,
+:root[data-theme="light"] .text-rose-200,
+:root[data-theme="light"] .text-rose-300,
+:root[data-theme="light"] .hover\:text-rose-200:hover {
+  color: #be123c !important;
+}
+
+:root[data-theme="light"] .text-amber-200,
+:root[data-theme="light"] .hover\:text-amber-200:hover {
+  color: #92400e !important;
+}
+
+:root[data-theme="light"] .text-emerald-200 {
+  color: #047857 !important;
+}
+
+:root[data-theme="light"] .text-violet-200 {
+  color: #6d28d9 !important;
+}
+
+:root[data-theme="light"] .hover\:text-cyan-200:hover,
+:root[data-theme="light"] .hover\:text-cyan-100:hover {
+  color: #0e7490 !important;
+}
+
+:root[data-theme="light"] .border-white\/10 {
+  border-color: rgb(15 23 42 / 0.12) !important;
+}
+
+:root[data-theme="light"] .border-cyan-300\/20,
+:root[data-theme="light"] .border-cyan-300\/40,
+:root[data-theme="light"] .border-cyan-300\/50 {
+  border-color: rgb(8 145 178 / 0.42) !important;
+}
+
+:root[data-theme="light"] .focus-visible\:outline-cyan-300:focus-visible,
+:root[data-theme="light"] .focus-visible\:outline-slate-400:focus-visible,
+:root[data-theme="light"] .focus-visible\:outline-rose-300:focus-visible {
+  outline-color: #0e7490 !important;
+}
+
+:root[data-theme="light"] .focus\:border-cyan-300\/50:focus,
+:root[data-theme="light"] .focus\:border-cyan-300\/60:focus {
+  border-color: rgb(8 145 178 / 0.85) !important;
+}
+
+:root[data-theme="light"] .focus\:ring-cyan-300\/20:focus {
+  --tw-ring-color: rgb(8 145 178 / 0.24) !important;
+}
+
+:root[data-theme="light"] .shadow-black\/10,
+:root[data-theme="light"] .shadow-black\/20,
+:root[data-theme="light"] .shadow-black\/30,
+:root[data-theme="light"] .shadow-black\/40,
+:root[data-theme="light"] .shadow-black\/50,
+:root[data-theme="light"] .shadow-cyan-950\/30,
+:root[data-theme="light"] .shadow-cyan-950\/40,
+:root[data-theme="light"] .shadow-emerald-950\/20 {
+  --tw-shadow-color: rgb(15 23 42 / 0.12) !important;
+}
+
+:root[data-theme="light"] .ring-cyan-300\/20 {
+  --tw-ring-color: rgb(8 145 178 / 0.24) !important;
+}
+
+:root[data-board-density="spacious"] .flowdeck-kanban-grid {
+  gap: 1rem;
+}
+
+@media (min-width: 1280px) {
+  :root[data-board-density="spacious"] .flowdeck-kanban-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+:root[data-board-density="spacious"] .flowdeck-kanban-column {
+  padding: 1.125rem;
+}
+
+:root[data-board-density="spacious"] .flowdeck-task-card {
+  padding: 1.125rem;
+}
+
+:root[data-board-density="spacious"] .flowdeck-task-list > * + * {
+  margin-top: 0.875rem;
+}
+
+:root[data-board-density="compact"] .flowdeck-task-card {
+  border-radius: 1.25rem;
+  padding: 0.625rem;
+}
+
+:root[data-board-density="compact"] .flowdeck-kanban-grid {
+  gap: 0.75rem;
+}
+
+@media (min-width: 1280px) {
+  :root[data-board-density="compact"] .flowdeck-kanban-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+:root[data-board-density="compact"] .flowdeck-kanban-column {
+  min-height: 20rem;
+  padding: 0.75rem;
+}
+
+:root[data-board-density="compact"] .flowdeck-column-controls {
+  margin-bottom: 0.75rem;
+}
+
+:root[data-board-density="compact"] .flowdeck-task-list {
+  min-height: 5rem;
+}
+
+:root[data-board-density="compact"] .flowdeck-task-list > * + * {
+  margin-top: 0.5rem;
+}
+
+:root[data-board-density="compact"] .flowdeck-empty-column {
+  border-radius: 1.25rem;
+  padding: 0.75rem;
+}
+
+:root[data-board-density="compact"] .flowdeck-task-card-header {
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.625rem;
+  max-width: 100%;
+}
+
+:root[data-board-density="compact"] .flowdeck-task-card-header > * {
+  max-width: 100%;
+}
+
+:root[data-board-density="compact"] .flowdeck-task-card-description,
+:root[data-board-density="compact"] .flowdeck-task-card-tags {
+  margin-bottom: 0.625rem;
+}
+
+:root[data-board-density="compact"] .flowdeck-task-card-meta,
+:root[data-board-density="compact"] .flowdeck-task-card-meta-group {
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+:root[data-board-density="compact"] .flowdeck-task-card p,
+:root[data-board-density="compact"] .flowdeck-task-card h4 {
+  line-height: 1.35;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]) {
+  cursor: pointer;
+}
+
+button:disabled,
+input:disabled,
+textarea:disabled,
+select:disabled {
+  cursor: not-allowed;
+}
+
+#root {
+  min-height: 100vh;
+}
