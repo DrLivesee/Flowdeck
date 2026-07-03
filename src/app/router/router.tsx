@@ -3,7 +3,14 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import { AppLayout } from "@/app/layout";
 
 import { ProtectedRoute, PublicAuthRoute } from "./auth-guards";
-import { AnalyticsRoutePage, BoardRoutePage, LoginRoutePage, RegisterRoutePage, SettingsRoutePage, TaskListRoutePage } from "./route-pages";
+import {
+  AnalyticsRoutePage,
+  BoardRoutePage,
+  LoginRoutePage,
+  RegisterRoutePage,
+  SettingsRoutePage,
+  TaskListRoutePage,
+} from "./route-pages";
 
 export const router = createBrowserRouter([
   {
