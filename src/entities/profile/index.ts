@@ -1,4 +1,5 @@
 export { getPermissions } from "./model/permissions";
+export { useUpdateOwnProfileMutation } from "./model/profile-mutations";
 export { indexProfilesById, isAssignableProfile, selectAssignableProfiles, selectProjectMemberProfiles } from "./model/selectors";
 export { ProfileMultiSelect } from "./ui/profile-multi-select";
 export { ProfileSearchSelect } from "./ui/profile-search-select";

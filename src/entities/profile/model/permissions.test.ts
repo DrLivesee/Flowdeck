@@ -9,6 +9,8 @@ function createProfile(role: AppRole, id = `${role}-user`): Profile {
   return {
     id,
     email: `${id}@example.com`,
+    firstName: id,
+    lastName: "User",
     fullName: id,
     role,
     createdAt: "2026-01-01T00:00:00.000Z",
