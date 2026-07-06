@@ -5,6 +5,7 @@ import { getAssignableProfiles, getProfile, getProfiles, getProjectMembers } fro
 const profileStaleTime = 5 * 60 * 1000;
 
 export const profileQueryKeys = {
+  all: ["profile"] as const,
   current: (userId: string | undefined) => ["profile", "current", userId] as const,
   assignableByProject: (projectId: string | null | undefined) => ["profile", "assignable", projectId] as const,
   list: ["profile", "list"] as const,

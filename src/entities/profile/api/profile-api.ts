@@ -9,10 +9,19 @@ type ProjectMemberRow = {
   sort_order: number;
 };
 
+export type UpdateOwnProfileInput = {
+  birthDate?: string;
+  firstName: string;
+  lastName: string;
+  middleName?: string;
+};
+
+const profileColumns = "id,email,first_name,last_name,middle_name,full_name,birth_date,role,created_at,updated_at";
+
 export async function getProfile(userId: string): Promise<Profile | null> {
   const { data, error } = await supabase
     .from("profiles")
-    .select("id,email,full_name,role,created_at,updated_at")
+    .select(profileColumns)
     .eq("id", userId)
     .maybeSingle<ProfileRow>();
 
@@ -26,7 +35,7 @@ export async function getProfile(userId: string): Promise<Profile | null> {
 export async function getProfiles(): Promise<Profile[]> {
   const { data, error } = await supabase
     .from("profiles")
-    .select("id,email,full_name,role,created_at,updated_at")
+    .select(profileColumns)
     .order("full_name")
     .returns<ProfileRow[]>();
 
@@ -57,7 +66,7 @@ export async function getProjectMembers(projectId: string): Promise<Profile[]> {
 
   const { data: profileRows, error: profileError } = await supabase
     .from("profiles")
-    .select("id,email,full_name,role,created_at,updated_at")
+    .select(profileColumns)
     .in("id", memberIds)
     .returns<ProfileRow[]>();
 
@@ -78,11 +87,28 @@ export async function getAssignableProfiles(projectId: string): Promise<Profile[
   return selectAssignableProfiles(projectMembers);
 }
 
+export async function updateOwnProfile(input: UpdateOwnProfileInput) {
+  const { error } = await supabase.rpc("update_own_profile", {
+    p_birth_date: input.birthDate || null,
+    p_first_name: input.firstName,
+    p_last_name: input.lastName,
+    p_middle_name: input.middleName || null,
+  });
+
+  if (error) {
+    throw error;
+  }
+}
+
 function mapProfile(row: ProfileRow): Profile {
   return {
     id: row.id,
     email: row.email,
+    firstName: row.first_name,
+    lastName: row.last_name,
+    middleName: row.middle_name ?? undefined,
     fullName: row.full_name,
+    birthDate: row.birth_date ?? undefined,
     role: row.role,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
