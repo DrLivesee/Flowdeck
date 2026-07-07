@@ -10,7 +10,7 @@ import type { Column } from "@/entities/column";
 import { ProfileSearchSelect, isAssignableProfile, type Profile } from "@/entities/profile";
 import { TagMultiSelect, type Tag } from "@/entities/tag";
 import type { TaskPriority } from "@/entities/task";
-import { useModalA11y } from "@/shared/lib";
+import { getAppLimitErrorMessage, useModalA11y } from "@/shared/lib";
 import { CancelButton, CreateButton, InlineAlert, Input, Select, Textarea } from "@/shared/ui";
 
 import { FormField } from "./form-field";
@@ -108,8 +108,8 @@ export function CreateTaskForm({ boardId, canChooseAssignee = false, columns, cu
         tagIds: values.tagIds,
         deadline: values.deadline || undefined,
       });
-    } catch {
-      setSubmitError(t("common.mutationError"));
+    } catch (error) {
+      setSubmitError(getAppLimitErrorMessage(error, t) ?? t("common.mutationError"));
       return;
     }
 

@@ -13,7 +13,8 @@ import {
   filterTaskColumns,
   hasActiveTaskFilters,
 } from "@/features/filter-tasks";
-import { getStoredBoardId } from "@/shared/lib";
+import { appLimits } from "@/shared/config";
+import { getAppLimitErrorMessage, getStoredBoardId } from "@/shared/lib";
 import { Card, InlineAlert } from "@/shared/ui";
 import { KanbanBoard } from "@/widgets/kanban-board";
 import { TaskDetailsPanel } from "@/widgets/task-details-panel";
@@ -120,6 +121,15 @@ export function BoardPage() {
 
     return project?.boardIds.flatMap((id) => boardsById[id] ?? []) ?? [];
   }, [activeBoard, boardsById, projectsById]);
+  const boardCreateDisabledReason = projectBoards.length >= appLimits.boardsPerProject
+    ? t("limits.boardsPerProject", { limit: appLimits.boardsPerProject })
+    : undefined;
+  const columnCreateDisabledReason = boardColumns.length >= appLimits.columnsPerBoard
+    ? t("limits.columnsPerBoard", { limit: appLimits.columnsPerBoard })
+    : undefined;
+  const taskCreateDisabledReason = boardStats.totalTasks >= appLimits.tasksPerBoard
+    ? t("limits.tasksPerBoard", { limit: appLimits.tasksPerBoard })
+    : undefined;
 
   function navigateToBoard(nextProjectId?: string | null, nextBoardId?: string | null) {
     void navigate(nextProjectId && nextBoardId ? `/projects/${nextProjectId}/boards/${nextBoardId}` : "/board");
@@ -130,8 +140,8 @@ export function BoardPage() {
 
     try {
       await action();
-    } catch {
-      setMutationError(t("common.mutationError"));
+    } catch (error) {
+      setMutationError(getAppLimitErrorMessage(error, t) ?? t("common.mutationError"));
     }
   }
 
@@ -148,9 +158,9 @@ export function BoardPage() {
     try {
       await mutations.reorderColumns.mutateAsync({ boardId: activeBoardView.id, columnId, targetIndex });
       setOptimisticColumnOrder(null);
-    } catch {
+    } catch (error) {
       setOptimisticColumnOrder(null);
-      setMutationError(t("common.mutationError"));
+      setMutationError(getAppLimitErrorMessage(error, t) ?? t("common.mutationError"));
     } finally {
       setIsColumnOrderPending(false);
     }
@@ -199,6 +209,7 @@ export function BoardPage() {
                 ) : null
               }
               boards={projectBoards}
+              createDisabledReason={boardCreateDisabledReason}
               isCreatePending={mutations.createBoard.isPending}
               isReadOnly={isBoardReadOnly || isBoardMutationPending}
               onBoardCreate={(name) => {
@@ -222,8 +233,10 @@ export function BoardPage() {
               boardId={activeBoard.id}
               canCreateColumn={permissions.canManageColumns}
               canCreateTask={permissions.canCreateTask}
+              columnCreateDisabledReason={columnCreateDisabledReason}
               isCreateColumnPending={mutations.createColumn.isPending}
               isTaskCreationDisabled={isKanbanBusy}
+              taskCreateDisabledReason={taskCreateDisabledReason}
               onCreateColumn={(input) => mutations.createColumn.mutateAsync(input)}
               onCreateTask={openCreateTask}
             />
@@ -288,7 +301,7 @@ export function BoardPage() {
         tagsById={tagsById}
       />
 
-      {isCreatingTask && permissions.canCreateTask && (
+      {isCreatingTask && permissions.canCreateTask && !taskCreateDisabledReason && (
         <CreateTaskForm
           boardId={activeBoard.id}
           canChooseAssignee={permissions.canManageEverything}

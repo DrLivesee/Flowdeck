@@ -1,4 +1,5 @@
 export { cn } from "./cn";
+export { getAppLimitErrorMessage } from "./app-limit-errors";
 export { formatDate, formatDateTime, getTodayISODate, isPastDate, toISODate } from "./date";
 export { formatCompactNumber, formatPercent } from "./format";
 export { createId } from "./id";
