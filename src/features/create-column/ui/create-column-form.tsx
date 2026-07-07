@@ -8,7 +8,7 @@ import { z } from "zod";
 
 import type { BoardId } from "@/entities/board";
 import type { Column } from "@/entities/column";
-import { cn } from "@/shared/lib";
+import { cn, getAppLimitErrorMessage } from "@/shared/lib";
 import { CancelButton, CreateButton, InlineAlert, Input, Spinner } from "@/shared/ui";
 
 const columnAccents = ["slate", "cyan", "blue", "violet", "fuchsia", "emerald", "amber", "rose"] as const satisfies readonly Column["accent"][];
@@ -26,11 +26,12 @@ const accentClass: Record<Column["accent"], string> = {
 
 type CreateColumnFormProps = {
   boardId: BoardId;
+  disabledReason?: string;
   isPending?: boolean;
   onCreateColumn: (input: { accent: Column["accent"]; boardId: BoardId; name: string }) => Promise<void> | void;
 };
 
-export function CreateColumnForm({ boardId, isPending = false, onCreateColumn }: CreateColumnFormProps) {
+export function CreateColumnForm({ boardId, disabledReason, isPending = false, onCreateColumn }: CreateColumnFormProps) {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -64,6 +65,7 @@ export function CreateColumnForm({ boardId, isPending = false, onCreateColumn }:
     },
   });
   const name = useWatch({ control, name: "name" });
+  const isDisabled = Boolean(disabledReason) || isPending;
 
   async function onSubmit(values: CreateColumnFormValues) {
     setSubmitError(null);
@@ -74,8 +76,8 @@ export function CreateColumnForm({ boardId, isPending = false, onCreateColumn }:
         name: values.name,
         accent: values.accent,
       });
-    } catch {
-      setSubmitError(t("common.mutationError"));
+    } catch (error) {
+      setSubmitError(getAppLimitErrorMessage(error, t) ?? t("common.mutationError"));
       return;
     }
 
@@ -90,7 +92,8 @@ export function CreateColumnForm({ boardId, isPending = false, onCreateColumn }:
         className="inline-flex h-11 items-center justify-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 text-sm font-semibold text-slate-300 shadow-lg shadow-black/20 transition hover:border-cyan-300/40 hover:bg-cyan-300/10 hover:text-cyan-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-300"
         type="button"
         aria-label={t("createColumn.open")}
-        disabled={isPending}
+        disabled={isDisabled}
+        title={disabledReason}
         onClick={() => setIsOpen((value) => !value)}
       >
         {isPending ? <Spinner /> : <Plus className="size-4" />}

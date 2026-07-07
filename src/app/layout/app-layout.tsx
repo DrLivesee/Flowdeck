@@ -6,6 +6,7 @@ import { matchPath, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { emptyWorkspaceSnapshot, useProjectStructureMutations, useWorkspaceQuery } from "@/entities/project";
 import { getPermissions, selectProjectMemberProfiles, useProfileQuery, useProfilesQuery } from "@/entities/profile";
 import { useAuth } from "@/entities/session";
+import { appLimits } from "@/shared/config";
 import { readLastBoardRoute, writeLastBoardRoute } from "@/shared/lib";
 
 import { buildProjectSummaries } from "./model/layout-view";
@@ -59,6 +60,9 @@ export function AppLayout() {
     () => buildProjectSummaries({ projectIds, projectsById, projectTaskStatsById: workspace.projectTaskStatsById }),
     [projectIds, projectsById, workspace.projectTaskStatsById],
   );
+  const projectCreateDisabledReason = projectSummaries.length >= appLimits.projectsTotal
+    ? t("limits.projectsTotal", { limit: appLimits.projectsTotal })
+    : undefined;
 
   useEffect(() => {
     if (hasValidRouteBoard && routeProjectId && routeBoardId) {
@@ -91,6 +95,7 @@ export function AppLayout() {
           isProjectUpdatePending={mutations.renameProject.isPending || mutations.updateProjectMembers.isPending}
           isProjectManagementReadOnly={!permissions.canManageProjects}
           memberProfiles={projectMemberProfiles}
+          projectCreateDisabledReason={projectCreateDisabledReason}
           projectSummaries={projectSummaries}
           navigationItems={navigationItems}
           onProjectCreate={async ({ memberIds, name }) => {

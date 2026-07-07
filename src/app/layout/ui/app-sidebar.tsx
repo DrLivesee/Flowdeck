@@ -16,6 +16,7 @@ type AppSidebarProps = {
   canReorderProjects?: boolean;
   memberProfiles: Profile[];
   isProjectManagementReadOnly?: boolean;
+  projectCreateDisabledReason?: string;
   projectSummaries: ProjectSummary[];
   navigationItems: NavigationItem[];
   onProjectCreate: (input: { memberIds: string[]; name: string }) => Promise<unknown>;
@@ -32,6 +33,7 @@ export function AppSidebar({
   canReorderProjects = false,
   isProjectManagementReadOnly = false,
   memberProfiles,
+  projectCreateDisabledReason,
   projectSummaries,
   navigationItems,
   onProjectCreate,
@@ -52,6 +54,7 @@ export function AppSidebar({
         isProjectUpdatePending={isProjectUpdatePending}
         isReadOnly={isProjectManagementReadOnly}
         memberProfiles={memberProfiles}
+        projectCreateDisabledReason={projectCreateDisabledReason}
         projectSummaries={projectSummaries}
         onProjectCreate={onProjectCreate}
         onProjectDelete={onProjectDelete}

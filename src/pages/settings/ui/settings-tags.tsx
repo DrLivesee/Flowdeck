@@ -6,6 +6,8 @@ import { useProjectStructureMutations, useTagsQuery } from "@/entities/project";
 import { getPermissions, useProfileQuery } from "@/entities/profile";
 import { useAuth } from "@/entities/session";
 import { selectTags, type Tag, type TagColor } from "@/entities/tag";
+import { appLimits } from "@/shared/config";
+import { getAppLimitErrorMessage } from "@/shared/lib";
 import { Badge, Button, InlineAlert, Input, Select } from "@/shared/ui";
 
 import { PreferenceCard } from "./preference-card";
@@ -37,6 +39,8 @@ export function SettingsTags() {
   const [newColor, setNewColor] = useState<TagColor>("cyan");
   const [searchQuery, setSearchQuery] = useState("");
   const [mutationError, setMutationError] = useState<string | null>(null);
+  const isTagLimitReached = tags.length >= appLimits.tagsTotal;
+  const tagLimitMessage = isTagLimitReached ? t("limits.tagsTotal", { limit: appLimits.tagsTotal }) : null;
   const filteredTags = useMemo(() => {
     const normalizedQuery = searchQuery.trim().toLocaleLowerCase();
 
@@ -54,16 +58,16 @@ export function SettingsTags() {
 
     try {
       await action();
-    } catch {
-      setMutationError(t("common.mutationError"));
-      throw new Error("Tag mutation failed");
+    } catch (error) {
+      setMutationError(getAppLimitErrorMessage(error, t) ?? t("common.mutationError"));
+      throw new Error("Tag mutation failed", { cause: error });
     }
   }
 
   function createTag() {
     const name = newName.trim();
 
-    if (!name || isReadOnly) {
+    if (!name || isReadOnly || isTagLimitReached) {
       return;
     }
 
@@ -80,11 +84,13 @@ export function SettingsTags() {
     >
         {!isReadOnly && (
           <div className="grid gap-3 sm:grid-cols-[1fr_12rem_auto]">
-            <Input value={newName} placeholder={t("settings.tags.placeholder")} onChange={(event) => setNewName(event.currentTarget.value)} />
-            <Select ariaLabel={t("settings.tags.color")} options={colorOptions} value={newColor} onValueChange={(value) => setNewColor(value as TagColor)} />
-            <Button type="button" disabled={!newName.trim()} isLoading={mutations.createTag.isPending} onClick={createTag}>{t("settings.tags.create")}</Button>
+            <Input disabled={isTagLimitReached} value={newName} placeholder={t("settings.tags.placeholder")} onChange={(event) => setNewName(event.currentTarget.value)} />
+            <Select ariaLabel={t("settings.tags.color")} disabled={isTagLimitReached} options={colorOptions} value={newColor} onValueChange={(value) => setNewColor(value as TagColor)} />
+            <Button type="button" disabled={!newName.trim() || isTagLimitReached} isLoading={mutations.createTag.isPending} onClick={createTag}>{t("settings.tags.create")}</Button>
           </div>
         )}
+
+        {!isReadOnly && tagLimitMessage && <p className="mt-3 text-xs leading-5 text-amber-200/90">{tagLimitMessage}</p>}
 
         {mutationError && <InlineAlert className="mt-4">{mutationError}</InlineAlert>}
 
