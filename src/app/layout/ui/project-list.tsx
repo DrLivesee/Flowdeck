@@ -30,6 +30,7 @@ type ProjectListProps = {
   isProjectUpdatePending?: boolean;
   canReorderProjects?: boolean;
   memberProfiles: Profile[];
+  projectCreateDisabledReason?: string;
   projectSummaries: ProjectSummary[];
   onProjectCreate: (input: { memberIds: string[]; name: string }) => Promise<unknown>;
   onProjectDelete: (projectId: string) => void;
@@ -45,6 +46,7 @@ export function ProjectList({
   isProjectUpdatePending = false,
   canReorderProjects = false,
   memberProfiles,
+  projectCreateDisabledReason,
   projectSummaries,
   onProjectCreate,
   onProjectDelete,
@@ -76,7 +78,13 @@ export function ProjectList({
 
   return (
     <section className="mt-6" aria-labelledby="project-sidebar-title">
-      <ProjectListHeader isProjectCreatePending={isProjectCreatePending} isReadOnly={isReadOnly} memberProfiles={memberProfiles} onProjectCreate={onProjectCreate} />
+      <ProjectListHeader
+        createDisabledReason={projectCreateDisabledReason}
+        isProjectCreatePending={isProjectCreatePending}
+        isReadOnly={isReadOnly}
+        memberProfiles={memberProfiles}
+        onProjectCreate={onProjectCreate}
+      />
 
       {projectSummaries.length > 0 && isDragEnabled ? (
         <DndContext collisionDetection={closestCenter} sensors={sensors} onDragEnd={handleDragEnd}>
@@ -127,11 +135,13 @@ export function ProjectList({
 }
 
 function ProjectListHeader({
+  createDisabledReason,
   isReadOnly,
   isProjectCreatePending,
   memberProfiles,
   onProjectCreate,
 }: {
+  createDisabledReason?: string;
   isProjectCreatePending: boolean;
   isReadOnly: boolean;
   memberProfiles: Profile[];
@@ -140,11 +150,14 @@ function ProjectListHeader({
   const { t } = useTranslation();
 
   return (
-    <div className="mb-3 flex items-center justify-between gap-3">
-      <h2 id="project-sidebar-title" className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">
-        {t("projectSidebar.title")}
-      </h2>
-      {!isReadOnly && <ProjectCreateButton isPending={isProjectCreatePending} memberProfiles={memberProfiles} onCreate={onProjectCreate} />}
+    <div className="mb-3 space-y-2">
+      <div className="flex items-center justify-between gap-3">
+        <h2 id="project-sidebar-title" className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">
+          {t("projectSidebar.title")}
+        </h2>
+        {!isReadOnly && <ProjectCreateButton disabledReason={createDisabledReason} isPending={isProjectCreatePending} memberProfiles={memberProfiles} onCreate={onProjectCreate} />}
+      </div>
+      {!isReadOnly && createDisabledReason && <p className="text-xs leading-5 text-amber-200/90">{createDisabledReason}</p>}
     </div>
   );
 }

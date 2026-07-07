@@ -5,17 +5,19 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { ProfileMultiSelect, useProjectMembersQuery, type Profile } from "@/entities/profile";
+import { getAppLimitErrorMessage } from "@/shared/lib";
 import { ActionRail, IconButton, Spinner } from "@/shared/ui";
 
 import type { ProjectSummary } from "../model/layout-view";
 
 type ProjectCreateButtonProps = {
+  disabledReason?: string;
   isPending?: boolean;
   memberProfiles: Profile[];
   onCreate: (input: { memberIds: string[]; name: string }) => Promise<unknown>;
 };
 
-export function ProjectCreateButton({ isPending = false, memberProfiles, onCreate }: ProjectCreateButtonProps) {
+export function ProjectCreateButton({ disabledReason, isPending = false, memberProfiles, onCreate }: ProjectCreateButtonProps) {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState("");
@@ -23,7 +25,8 @@ export function ProjectCreateButton({ isPending = false, memberProfiles, onCreat
   const [submitError, setSubmitError] = useState<string | null>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const popoverRef = useRef<HTMLDivElement | null>(null);
-  const canSubmit = Boolean(name.trim() && memberIds.length > 0 && !isPending);
+  const isDisabled = Boolean(disabledReason) || isPending;
+  const canSubmit = Boolean(name.trim() && memberIds.length > 0 && !isDisabled);
   useDismissiblePopover({ isOpen, popoverRef, triggerRef: buttonRef, onClose: () => setIsOpen(false) });
 
   async function createProject() {
@@ -35,8 +38,8 @@ export function ProjectCreateButton({ isPending = false, memberProfiles, onCreat
 
     try {
       await onCreate({ memberIds, name });
-    } catch {
-      setSubmitError(t("common.mutationError"));
+    } catch (error) {
+      setSubmitError(getAppLimitErrorMessage(error, t) ?? t("common.mutationError"));
       return;
     }
 
@@ -51,7 +54,8 @@ export function ProjectCreateButton({ isPending = false, memberProfiles, onCreat
         ref={buttonRef}
         className="rounded-full p-1.5 text-slate-500 transition hover:bg-white/10 hover:text-cyan-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-300"
         type="button"
-        disabled={isPending}
+        disabled={isDisabled}
+        title={disabledReason}
         aria-label={t("projectActions.create")}
         onClick={() => setIsOpen((value) => !value)}
       >

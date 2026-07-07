@@ -27,6 +27,7 @@ type BoardTabsProps = {
   activeBoardId: string;
   activeBoardActions?: ReactNode;
   boards: Board[];
+  createDisabledReason?: string;
   isReadOnly?: boolean;
   isCreatePending?: boolean;
   onBoardCreate: (name: string) => void;
@@ -34,7 +35,7 @@ type BoardTabsProps = {
   onBoardSelect: (boardId: string) => void;
 };
 
-export function BoardTabs({ activeBoardActions, activeBoardId, boards, isCreatePending = false, isReadOnly = false, onBoardCreate, onBoardReorder, onBoardSelect }: BoardTabsProps) {
+export function BoardTabs({ activeBoardActions, activeBoardId, boards, createDisabledReason, isCreatePending = false, isReadOnly = false, onBoardCreate, onBoardReorder, onBoardSelect }: BoardTabsProps) {
   const [isCreating, setIsCreating] = useState(false);
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -73,6 +74,7 @@ export function BoardTabs({ activeBoardActions, activeBoardId, boards, isCreateP
                   {board.id === activeBoardId && activeBoardActions}
                   {board.id === activeBoardId && !isReadOnly && (
                     <BoardCreateButton
+                      disabledReason={createDisabledReason}
                       isOpen={isCreating}
                       isPending={isCreatePending}
                       onCancel={() => setIsCreating(false)}
@@ -89,17 +91,20 @@ export function BoardTabs({ activeBoardActions, activeBoardId, boards, isCreateP
           </SortableContext>
         </DndContext>
       </div>
+      {!isReadOnly && createDisabledReason && <p className="mt-2 text-xs leading-5 text-amber-200/90">{createDisabledReason}</p>}
     </div>
   );
 }
 
 function BoardCreateButton({
+  disabledReason,
   isOpen,
   isPending,
   onCancel,
   onOpenChange,
   onSubmit,
 }: {
+  disabledReason?: string;
   isOpen: boolean;
   isPending: boolean;
   onCancel: () => void;
@@ -108,6 +113,7 @@ function BoardCreateButton({
 }) {
   const { t } = useTranslation();
   const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const isDisabled = Boolean(disabledReason) || isPending;
 
   return (
     <div className="relative shrink-0">
@@ -115,7 +121,8 @@ function BoardCreateButton({
         ref={buttonRef}
         className="inline-flex size-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-slate-400 transition hover:border-cyan-300/40 hover:text-cyan-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-300"
         type="button"
-        disabled={isPending}
+        disabled={isDisabled}
+        title={disabledReason}
         aria-label={t("boardManager.create")}
         onClick={() => onOpenChange((value) => !value)}
       >

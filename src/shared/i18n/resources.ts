@@ -171,6 +171,13 @@ export const resources = {
         mutationError: "Не удалось сохранить изменения. Попробуйте еще раз.",
         dismiss: "Скрыть сообщение",
       },
+      limits: {
+        projectsTotal: "Достигнут лимит проектов: {{limit}}.",
+        boardsPerProject: "В проекте уже {{limit}} досок.",
+        columnsPerBoard: "На доске уже {{limit}} колонок.",
+        tasksPerBoard: "На доске уже {{limit}} задач.",
+        tagsTotal: "Достигнут лимит тегов: {{limit}}.",
+      },
       taskAssignee: {
         unassigned: "Без исполнителя",
       },
@@ -776,6 +783,13 @@ export const resources = {
         serverError: "Could not load data from Supabase.",
         mutationError: "Could not save changes. Try again.",
         dismiss: "Dismiss message",
+      },
+      limits: {
+        projectsTotal: "Project limit reached: {{limit}}.",
+        boardsPerProject: "This project already has {{limit}} boards.",
+        columnsPerBoard: "This board already has {{limit}} columns.",
+        tasksPerBoard: "This board already has {{limit}} tasks.",
+        tagsTotal: "Tag limit reached: {{limit}}.",
       },
       taskAssignee: {
         unassigned: "Unassigned",
